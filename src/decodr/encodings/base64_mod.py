@@ -47,7 +47,7 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) < 3:
-        print("Usage: python3 -m decodr.encodings.<module> <encode|decode> <text>")
+        print("Usage: python3 -m decodr.encodings.base64_mod <encode|decode> <text>")
         sys.exit(1)
 
     cmd, text = sys.argv[1], sys.argv[2]
