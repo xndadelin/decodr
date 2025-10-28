@@ -49,7 +49,7 @@ def decrypt(ciphertext: str, key: str) -> str:
             k = _char_to_shift(key_stream[j].lower())
             result.append(_shift(ch, k), decrypt=True)
             j += 1
-            key_stream.append(p)
+            key_stream.append(_shift(ch, k), decrypt=True)
         else:
             result.append(ch)
             
