@@ -11,12 +11,12 @@ import sys
 
 def read_input(text: str | None = None, infile: str | None = None, binary: bool = False) -> bytes:
     if text is not None:
-        return text.encode('utf-8') if not binary else bytes(text, 'utf-8', 'ignore') 
+        return text.encode('utf-8') if not binary else text.encode('utf-8', 'ignore')
     
     if infile:
         path = Path(infile)
         # mode = "rb" if binary else "r"
-        data = path.read_bytes() if binary else path.read_text(encoding="utf-8", error="ignore")
+        data = path.read_bytes() if binary else path.read_text(encoding="utf-8", errors="ignore")
         return data if isinstance(data, bytes) else data.encode('utf-8')
     
     data = sys.stdin.buffer.read()
