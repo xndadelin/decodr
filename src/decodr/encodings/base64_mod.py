@@ -1,7 +1,7 @@
 """
 decodr.encodings.base64_mod - Base64 encode/decode helpers.
 
-Featuers:
+Features:
 - UTF-8 text in/out (internal bytes conversion)
 - urlsafe variant - https://datatracker.ietf.org/doc/html/rfc4648
 - do not worry about missing padding on decode
