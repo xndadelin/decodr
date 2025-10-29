@@ -95,10 +95,19 @@ def encrypt(plaintext: str, key: str | None = None, period: int = 5) -> str:
         rows.append(r)
         cols.append(c)
 
-    fr, fc = _fractionate(rows, cols, period)
     out_letters: List[str] = []
-    for r, c in zip(fr, fc):
-        out_letters.append(_letter_from_coords(square, r, c))
+    n = len(letters)
+    i = 0
+    while i < n:
+        blk_len = min(period, n - i)
+        r_block = rows[i: i + blk_len]
+        c_block = cols[i: i + blk_len]
+        combined = r_block + c_block
+        for j in range(0, 2 * blk_len, 2):
+            rr = combined[j]
+            cc = combined[j + 1]
+            out_letters.append(_letter_from_coords(square, rr, cc))
+        i += blk_len
 
     return _reinsert_nonletters(out_letters, mask)
 
@@ -120,22 +129,25 @@ def decrypt(ciphertext: str, key: str | None = None, period: int = 5) -> str:
         rows.append(r)
         cols.append(c)
 
-    n = len(rows)
-    i = 0
-    rec_rows: List[int] = []
-    rec_cols: List[int] = []
-    while i < n :
-        blk_len = min(period, n - i)
-        r_block = rows[i : i + blk_len]
-        c_block = cols[i: i + blk_len]
-
-        rec_rows.extend(r_block)
-        rec_cols.extend(c_block)
-        i += blk_len
+    seq: List[int] = []
+    for ch in letters:
+        r, c = pos[ch]
+        seq.extend([r, c])
 
     out_letters: List[str] = []
-    for r, c in zip(rec_rows, rec_cols):
-        out_letters.append(_letter_from_coords(square, r, c))
+    n = len(letters)
+    i = 0
+    p = 0
+    while i < n:
+        blk_len = min(period, n - i)
+        block = seq[p : p + 2 * blk_len]
+        r_block = block[:blk_len]
+        c_block = block[blk_len:]
+        for j in range(blk_len):
+            out_letters.append(_letter_from_coords(square, r_block[j], c_block[j]))
+        
+        p += 2 * blk_len
+        i += blk_len
 
     return _reinsert_nonletters(out_letters, mask)
 
@@ -160,7 +172,7 @@ if __name__ == "__main__":
     period = int(sys.argv[4]) if len(sys.argv) >= 5 else 5
 
     try:
-        if cmd in ("encrypt, decrypt"):
+        if cmd in ("encrypt", "encode"):
             print(encrypt(text, key=key, period=period))
         elif cmd in ("decrypt", "decode"):
             print(decrypt(text, key=key, period=period))
