@@ -1,50 +1,50 @@
 """
-decodr.api - high-level interface.
+pydecodr.api - high-level interface.
 
 This module provides a unified interface for encoding, decoding, and
-autodetection across all submodules of the decodr package.
+autodetection across all submodules of the pydecodr package.
 """
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 from importlib import import_module
 
 ENCODING_MAP = {
-    "base64": "decodr.encodings.base64_mod",
-    "base32": "decodr.encodings.base32_mod",
-    "hex": "decodr.encodings.hex_mod",
-    "url": "decodr.encodings.url_mod",
+    "base64": "pydecodr.encodings.base64_mod",
+    "base32": "pydecodr.encodings.base32_mod",
+    "hex": "pydecodr.encodings.hex_mod",
+    "url": "pydecodr.encodings.url_mod",
 
-    "caesar": "decodr.ciphers.classical.caesar",
-    "atbash": "decodr.ciphers.classical.atbhas",
-    "affine": "decodr.ciphers.classical.affine",
-    "rot13": "decodr.ciphers.classical.rot13",
-    "substitution": "decodr.ciphers.classical.substitution",
+    "caesar": "pydecodr.ciphers.classical.caesar",
+    "atbash": "pydecodr.ciphers.classical.atbhas",
+    "affine": "pydecodr.ciphers.classical.affine",
+    "rot13": "pydecodr.ciphers.classical.rot13",
+    "substitution": "pydecodr.ciphers.classical.substitution",
 
-    "vigenere": "decodr.ciphers.polyalphabetic.vignere",
-    "autokey_vignere": "decodr.ciphers.polyalphabetic.autokey_vigenere",
-    "beaufort": "decodr.ciphers.polyalphabetic.beaufort",
-    "playfair": "decodr.ciphers.polyalphabetic.playfair",
+    "vigenere": "pydecodr.ciphers.polyalphabetic.vignere",
+    "autokey_vignere": "pydecodr.ciphers.polyalphabetic.autokey_vigenere",
+    "beaufort": "pydecodr.ciphers.polyalphabetic.beaufort",
+    "playfair": "pydecodr.ciphers.polyalphabetic.playfair",
 
-    "bifid": "decodr.ciphers.fractionation.bifid",
-    "adfgx": "decodr.ciphers.fractionation.adfgx",
+    "bifid": "pydecodr.ciphers.fractionation.bifid",
+    "adfgx": "pydecodr.ciphers.fractionation.adfgx",
 
-    "railfence": "decodr.ciphers.transposition.railfence",
-    "columnar": "decodr.ciphers.transposition.columnar",
+    "railfence": "pydecodr.ciphers.transposition.railfence",
+    "columnar": "pydecodr.ciphers.transposition.columnar",
 
-    "xor": "decodr.ciphers.stream.xor",
-    "repeating_xor": "decodr.ciphers.stream.repeating_xor",
-    "rc4": "decodr.ciphers.stream.rc4",
+    "xor": "pydecodr.ciphers.stream.xor",
+    "repeating_xor": "pydecodr.ciphers.stream.repeating_xor",
+    "rc4": "pydecodr.ciphers.stream.rc4",
 
-    "enigma": "decodr.ciphers.rotor.enigma",
+    "enigma": "pydecodr.ciphers.rotor.enigma",
 
-    "aes": "decodr.ciphers.modern.aes",
-    "rsa": "decodr.ciphers.modern.rsa",
-    "hashes": "decodr.ciphers.modern.hashes",
+    "aes": "pydecodr.ciphers.modern.aes",
+    "rsa": "pydecodr.ciphers.modern.rsa",
+    "hashes": "pydecodr.ciphers.modern.hashes",
 
-    "fmt": "decodr.utils.fmt",
-    "ioutils": "decodr.utils.ioutils"
+    "fmt": "pydecodr.utils.fmt",
+    "ioutils": "pydecodr.utils.ioutils"
 }
 
 def __load_module(scheme: str):
