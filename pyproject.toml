@@ -31,7 +31,7 @@ dependencies = [
 dev = ["pytest>=8.0.0"]
 
 [project.urls]
-Homepage = "https://xndadelin.me/pydecodr"
+Homepage = "https://pypi.org/project/pydecodr/"
 Repository = "https://github.com/xndadelin/pydecodr"
 Issues = "https://github.com/xndadelin/pydecodr/issues"
 
