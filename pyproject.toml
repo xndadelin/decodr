@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pydecodr"
-version = "0.1.1"
+version = "0.1.2"
 description = "A modular CTF/crypto library toolkit for encodings, classic ciphers, and autodetection. CLI included :3."
 readme = "README.md"
 requires-python = ">=3.8"
