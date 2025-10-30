@@ -65,5 +65,5 @@ mod = load_module("adfgx")
 ciphertext = mod.encrypt("DEFEND THE EAST WALL", "FORTIFICATION", "CIPHER")
 print(mod.decrypt(ciphertext, "FORTIFICATION", "CIPHER"))
 ```
-Check this for more usage: [alt](https://xndadelin.me/pydecodr/)
+Check this for more usage: [usage](https://xndadelin.me/pydecodr/)
 
