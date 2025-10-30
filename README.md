@@ -6,11 +6,11 @@
   </a>
 </div>
 
-# decodr
+# pydecodr
 > A modular CTF/crypto library toolkit for encodings, classic ciphers, and autodetection. CLI included :3.
 
 
-`decodr` is a Python package that lets you **encode, decode, encrypt or decrypt text** using classical, polyalphabetic, modern, and stream ciphers, all through a **Python API** and a **CLI interface**
+`pydecodr` is a Python package that lets you **encode, decode, encrypt or decrypt text** using classical, polyalphabetic, modern, and stream ciphers, all through a **Python API** and a **CLI interface**
 
 ---
 ## Features:
@@ -28,7 +28,7 @@
 
 ## Installation
 ```bash
-pip install decodr
+pip install pydecodr
 ```
 
 --- 
@@ -38,18 +38,18 @@ pip install decodr
 You can use any cipher module directly with Python's `-m` flag:
 
 ```python
-# caesar cipher, 
-python3 -m decodr.ciphers.classical.caesar encrypt "HELLO" 3
+# caesar cipher
+python3 -m pydecodr.ciphers.classical.caesar encrypt "HELLO" 3
 # -> KHOOR
 
-python3 -m decodr.ciphers.classical.caesar decrypt "KHOOR" 3
+python3 -m pydecodr.ciphers.classical.caesar decrypt "KHOOR" 3
 # -> HELLO
 ```
 
 ### Python API
 ```python
-from decodr.ciphers.classical import caesar
-from decodr.ciphers.polyalphabetic import vigenere
+from pydecodr.ciphers.classical import caesar
+from pydecodr.ciphers.polyalphabetic import vigenere
 
 print(caesar.encrypt("HELLO", 3))
 # KHOOR
@@ -59,7 +59,7 @@ print(vigenere.encrypt("HELLOWORLD", "KEY"))
 ```
 Or load dynamically using the global registry:
 ```python
-from decodr import load_module
+from pydecodr import load_module
 
 mod = load_module("adfgx")
 ciphertext = mod.encrypt("DEFEND THE EAST WALL", "FORTIFICATION", "CIPHER")
