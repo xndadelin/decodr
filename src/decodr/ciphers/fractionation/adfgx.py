@@ -84,7 +84,7 @@ def _columnar_encrypt(stream: str, key: str, pad: str | None = "X") -> str:
     out: List[str] = []
     for col in order:
         for r in rows:
-            if col < len(r):
+            if col < len(r): 
                 out.append(r[col])
     return "".join(out)
 
