@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decodr"
+version = "0.1.0"
+description = "A modular CTF/crypto library toolkit for encodings, classic ciphers, and autodetection. CLI included :3."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+
+authors = [ { name = "Adelin Sofian", email = "adelin@hackclub.app" } ]
+
+keywords = [
+    "cryptography",
+    "ctf",
+    "encoding",
+    "cipher",
+    "python3"
+]
+
+dependencies = [
+    "pycryptome>=3.20.0",
+    "numpy>=1.26.0",
+    "rich>=13.7.0",
+    "typer>=0.12.3"
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+[project.urls]
+Homepage = "https://xndadelin.me/decodr"
+Repository = "https://github.com/xndadelin/decodr"
+Issues = "https://github.com/xndadelin/decodr/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["decodr*"]
+
+[tool.setuptools.package-data]
+"decodr" = ["py.typed"]
