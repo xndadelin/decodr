@@ -1,4 +1,4 @@
-from decodr.ciphers.classical import caesar
+from pydecodr.ciphers.classical import caesar
 
 def test_caesar():
     text = "HACKCLUB"

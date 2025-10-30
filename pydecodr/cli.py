@@ -11,7 +11,7 @@ from __future__ import annotations
 import typer
 from rich.console import Console
 from rich.table import Table
-from decodr import encode as api_encode, decode as api_decode, detect as api_detect
+from pydecodr import encode as api_encode, decode as api_decode, detect as api_detect
 
 app = typer.Typer(
     help="decodr - decodr - a modular CTF/crypto CLI toolkit for encodings, classic ciphers, and autodetection."

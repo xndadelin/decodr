@@ -1,5 +1,5 @@
 import base64
-from decodr.ciphers.modern import aes
+from pydecodr.ciphers.modern import aes
 
 def test_aes(monkeypatch):
     monkeypatch.setattr(aes, "get_random_bytes", lambda n: b"\x00" * n)

@@ -1,4 +1,4 @@
-from decodr.ciphers.fractionation import bifid
+from pydecodr.ciphers.fractionation import bifid
 
 def test_bifid():
     plaintext = "DEFENDTHEEASTWALLOFTHECASTLE"

@@ -1,4 +1,4 @@
-from decodr.ciphers.polyalphabetic import beaufort
+from pydecodr.ciphers.polyalphabetic import beaufort
 
 def test_beaufort():
     text = "BEAUFORT"

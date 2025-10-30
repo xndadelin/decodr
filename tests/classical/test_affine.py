@@ -1,4 +1,4 @@
-from decodr.ciphers.classical import affine
+from pydecodr.ciphers.classical import affine
 
 def test_affine():
     text = "BUCHAREST"

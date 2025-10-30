@@ -1,4 +1,4 @@
-from decodr.ciphers.polyalphabetic import vigenere, autokey_vigenere
+from pydecodr.ciphers.polyalphabetic import vigenere, autokey_vigenere
 
 def test_vigenere():
     text = "ILOVEPYTHON"

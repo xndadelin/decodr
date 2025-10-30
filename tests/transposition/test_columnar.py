@@ -1,4 +1,4 @@
-from decodr.ciphers.transposition import columnar
+from pydecodr.ciphers.transposition import columnar
 
 def test_columnar():
     text = "DEFENDDUCKADAM"

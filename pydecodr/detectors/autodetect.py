@@ -7,7 +7,7 @@ import base64
 import binascii
 import re
 from typing import Optional, List, Dict
-from decodr.utils.fmt import _printable_ratio
+from pydecodr.utils.fmt import _printable_ratio
 
 def is_hex(s: str) -> bool:
     return bool(re.fullmatch(r"[0-9A-Fa-f]+", s)) and len(s) % 2 == 0

@@ -31,13 +31,13 @@ dependencies = [
 dev = ["pytest>=8.0.0"]
 
 [project.urls]
-Homepage = "https://xndadelin.me/decodr"
-Repository = "https://github.com/xndadelin/decodr"
-Issues = "https://github.com/xndadelin/decodr/issues"
+Homepage = "https://xndadelin.me/pydecodr"
+Repository = "https://github.com/xndadelin/pydecodr"
+Issues = "https://github.com/xndadelin/pydecodr/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["decodr*"]
+include = ["pydecodr*"]
 
 [tool.setuptools.package-data]
-"decodr" = ["py.typed"]
+"pydecodr" = ["py.typed"]

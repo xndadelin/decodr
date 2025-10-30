@@ -1,4 +1,4 @@
-from decodr.ciphers.polyalphabetic import playfair
+from pydecodr.ciphers.polyalphabetic import playfair
 
 def test_playfair():
     text = "HIDETHEGOLD"

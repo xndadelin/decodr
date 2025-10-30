@@ -1,5 +1,5 @@
 import hashlib
-from decodr.ciphers.modern import hashes
+from pydecodr.ciphers.modern import hashes
 
 def test_hashes():
     s = "HACKCLUB"

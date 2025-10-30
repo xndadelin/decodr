@@ -1,4 +1,4 @@
-from decodr.ciphers.transposition import railfence
+from pydecodr.ciphers.transposition import railfence
 
 def test_railfence():
     text = "HELLOFROMTHEMOON"

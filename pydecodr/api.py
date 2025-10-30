@@ -68,7 +68,7 @@ def decode(scheme: str, text: str, **kwargs: Any) -> str:
     return fn(text, **kwargs)
 
 def detect(text: str, limit: int = 5) -> list[dict[str, str]]:
-    from decodr.detectors.autodetect import try_decode_candidates
+    from pydecodr.detectors.autodetect import try_decode_candidates
     candidates = try_decode_candidates(text, limit=limit)
     return [
         {

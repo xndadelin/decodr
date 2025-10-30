@@ -1,4 +1,4 @@
-from decodr.ciphers.rotor import enigma
+from pydecodr.ciphers.rotor import enigma
 
 def test_engima():
     pt = "HACKCLUB"

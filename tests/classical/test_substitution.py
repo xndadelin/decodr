@@ -1,4 +1,4 @@
-from decodr.ciphers.classical import substitution
+from pydecodr.ciphers.classical import substitution
 
 def test_substitution():
     text = "AVADAKEDAVRA"

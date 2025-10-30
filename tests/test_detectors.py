@@ -1,5 +1,5 @@
-from decodr.detectors import autodetect
-from decodr.detectors import file_magic
+from pydecodr.detectors import autodetect
+from pydecodr.detectors import file_magic
 
 def test_autodetect():
     assert autodetect.detect_type("48656c6c6f")['type'] == 'hex'

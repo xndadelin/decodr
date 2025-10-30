@@ -3,7 +3,7 @@ decodr.ciphers.classical.rot13 - ROT13 cipher via caesar(where shift is 13)
 """
 
 from __future__ import annotations
-from decodr.ciphers.classical import caesar
+from pydecodr.ciphers.classical import caesar
 
 def encode(text: str) -> str:
     return caesar.encrypt(text, shift=13)

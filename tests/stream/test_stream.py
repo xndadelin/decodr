@@ -1,4 +1,4 @@
-from decodr.ciphers.stream import xor, repeating_xor, rc4
+from pydecodr.ciphers.stream import xor, repeating_xor, rc4
 
 def text_xor_roundtrip():
     key = "0x20"

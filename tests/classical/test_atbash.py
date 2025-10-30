@@ -1,4 +1,4 @@
-from decodr.ciphers.classical import atbash
+from pydecodr.ciphers.classical import atbash
 
 def test_atbash():
     text = "SANFRANCISCO"

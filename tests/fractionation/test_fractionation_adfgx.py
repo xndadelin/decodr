@@ -1,4 +1,4 @@
-from decodr.ciphers.fractionation import adfgx
+from pydecodr.ciphers.fractionation import adfgx
 
 def test_adfgx():
     pt = "DEFENDTHEEASTWALLOFTHECASTLE"

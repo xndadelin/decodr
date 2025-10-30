@@ -1,4 +1,4 @@
-from decodr.ciphers.modern import rsa
+from pydecodr.ciphers.modern import rsa
 
 def test_rsa():
     pub, priv = rsa._generate_keys(61, 53, 65537)
