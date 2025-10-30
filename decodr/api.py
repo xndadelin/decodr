@@ -14,11 +14,37 @@ ENCODING_MAP = {
     "base64": "decodr.encodings.base64_mod",
     "base32": "decodr.encodings.base32_mod",
     "hex": "decodr.encodings.hex_mod",
+    "url": "decodr.encodings.url_mod",
+
     "caesar": "decodr.ciphers.classical.caesar",
+    "atbash": "decodr.ciphers.classical.atbhas",
+    "affine": "decodr.ciphers.classical.affine",
     "rot13": "decodr.ciphers.classical.rot13",
-    "atbash": "decodr.ciphers.classical.atbash",
-    "vignere": "decodr.ciphers.polyalphabetic.vignere"
-    # im gonna add more as they are implemented one by one
+    "substitution": "decodr.ciphers.classical.substitution",
+
+    "vigenere": "decodr.ciphers.polyalphabetic.vignere",
+    "autokey_vignere": "decodr.ciphers.polyalphabetic.autokey_vigenere",
+    "beaufort": "decodr.ciphers.polyalphabetic.beaufort",
+    "playfair": "decodr.ciphers.polyalphabetic.playfair",
+
+    "bifid": "decodr.ciphers.fractionation.bifid",
+    "adfgx": "decodr.ciphers.fractionation.adfgx",
+
+    "railfence": "decodr.ciphers.transposition.railfence",
+    "columnar": "decodr.ciphers.transposition.columnar",
+
+    "xor": "decodr.ciphers.stream.xor",
+    "repeating_xor": "decodr.ciphers.stream.repeating_xor",
+    "rc4": "decodr.ciphers.stream.rc4",
+
+    "enigma": "decodr.ciphers.rotor.enigma",
+
+    "aes": "decodr.ciphers.modern.aes",
+    "rsa": "decodr.ciphers.modern.rsa",
+    "hashes": "decodr.ciphers.modern.hashes",
+
+    "fmt": "decodr.utils.fmt",
+    "ioutils": "decodr.utils.ioutils"
 }
 
 def __load_module(scheme: str):
