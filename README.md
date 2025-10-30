@@ -7,8 +7,8 @@
 </div>
 
 # decodr
-A modular CTF/crypto library toolkit for encodings, classic ciphers, and autodetection. CLI included :3.
->
+> A modular CTF/crypto library toolkit for encodings, classic ciphers, and autodetection. CLI included :3.
+
 
 `decodr` is a Python package that lets you **encode, decode, encrypt or decrypt text** using classical, polyalphabetic, modern, and stream ciphers, all through a **Python API** and a **CLI interface**
 
