@@ -41,6 +41,8 @@ def decrypt(ciphertext: str, rails: int = 3) -> str:
     for k, i in enumerate(order):
         plain[i] = ciphertext[k]
 
+    return "".join(plain[i] for i in range(n))
+
 encode = encrypt
 decode = decrypt
 

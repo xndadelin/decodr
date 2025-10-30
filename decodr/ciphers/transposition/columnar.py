@@ -52,7 +52,8 @@ def decrypt(ciphertext: str, key: str, pad: str | None = None) -> str:
         
         col_lengths: list[int] = []
         for idx_in_order in range(ncols):
-            length = nrows if idx_in_order < full_in_last_row else max(nrows - 1, 0)
+            orig_col = order[idx_in_order]
+            length = nrows if orig_col < full_in_last_row else max(nrows - 1, 0)
             col_lengths.append(length)
             
     cols_data: list[str] = []
