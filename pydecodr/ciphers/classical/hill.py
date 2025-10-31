@@ -99,7 +99,7 @@ def det3(M):
     a, b, c = M[0]
     d, e, f = M[1]
     g, h, i = M[2]
-    return (a*(e*i - f*h) - b(d*i - f*g) + c*(d*h - e*g)) % MOD
+    return (a*(e*i - f*h) - b*(d*i - f*g) + c*(d*h - e*g)) % MOD
 
 def mat_inv2(M):
     d = det2(M)
@@ -139,4 +139,103 @@ def mat_inv3(M):
 def mat_mul_vec(M, v):
     n = len(M)
     return [sum(M[r][k] * v[k] for k in range(n)) % MOD for r in range(n)]
+
+def _block_process(letters: str, M):
+    n = len(M)
+    out = []
+    for i in range(0, len(letters), n):
+        block = letters[i:i+n]
+        vec = [idx(c) for c in block]
+        res = mat_mul_vec(M, vec)
+        out.extend(ch(x) for x in res)
+    
+    return "".join(out)
+
+def _with_space_reinsert(original: str, processed: str) -> str:
+    res = list(original.upper())
+    j = 0
+    for i, c in enumerate(res):
+        if c in ALPHABET_SET:
+            if j >= len(processed):
+                break
+            res[i] = processed[j]
+            j += 1
+    return "".join(res)
+
+def encrypt(text: str, key_matrix_str: str, pad_char: str = "X", keep_layout: bool = False) -> str:
+    M, n = parse_matrix(key_matrix_str)
+    pad_char = (pad_char or "X")[0].upper()
+    if pad_char not in ALPHABET_SET:
+        raise ValueError("pad_char must be an alpha.")
+    
+    letters = letters_only_and_positions(text)[0] if keep_layout else clean_letters(text)
+    if len(letters) % n != 0:
+        need = n - (len(letters) % n)
+        letters += pad_char * need
+
+    out_letters = _block_process(letters, M)
+    return _with_space_reinsert(text, out_letters) if keep_layout else out_letters
+
+def decrypt(text: str, key_matrix_str: str, keep_layout: bool = False) -> str:
+    M, n = parse_matrix(key_matrix_str)
+    Minv = mat_inv2(M) if n == 2 else mat_inv3(M)
+
+    letters = letters_only_and_positions(text)[0] if keep_layout else clean_letters(text)
+
+    if len(letters) % n != 0:
+        letters = letters[:len(letters) - (len(letters) % n)]
+
+    out_letters = _block_process(letters, Minv)
+    return _with_space_reinsert(text, out_letters) if keep_layout else out_letters
+
+if __name__ == "__main__":
+    import sys
+    
+    usage = (
+        "Usage:\n"
+        "python3 -m pydecodr.ciphers.classical.hill encrypt <text> <matrix> [pad_char] [keep_layout]\n"
+        "python3 -m pydecodr.ciphers.classical.hill decrypt <text> <matrix> [keep_layout]\n"
+        "\n"
+        "Matrix formats accepted:\n"
+        '2x2: "a,b,c,d" | "a b c d" | "a,b; c,d;" | "a b | c d"\n'
+        'same with 3x3 but with 9 items yk\n'
+        "Examples:\n"
+        'python3 -m pydecodr.ciphers.classical.hill encrypt "ATTACKATDAWN" "3,3,2,5"\n'
+    )
+
+    argv = sys.argv[1:]
+    if len(argv) < 3:
+        print(usage)
+        sys.exit(1)
+
+    op = argv[0].lower()
+
+    if op == "encrypt":
+        text = argv[1]
+        key_str = argv[2]
+        pad_char = "X"
+        keep_layout = False
+        if len(argv) >= 4 and argv[3]:
+            pad_char = argv[3][0].upper()
+        if len(argv) >= 5:
+            keep_layout = argv[4].lower() in ("1", "true", "yes", "y")
+        try:
+            print(encrypt(text, key_str, pad_char=pad_char, keep_layout=keep_layout))
+        except Exception as e:
+            print(f"Error: {e}")
+            sys.exit(1)
+    elif op == "decrypt":
+        text = argv[1]
+        key_str = argv[2]
+        keep_layout = False
+        if len(argv) >= 4:
+            keep_layout = argv[3].lower() in ("1", "true", "yes", "y")
+        try:
+            print(decrypt(text, key_str, keep_layout=keep_layout))
+        except Exception as e:
+            print(f"Error: {e}")
+            sys.exit(1)
+    else:
+        print(usage)
+        sys.exit(1)
 
