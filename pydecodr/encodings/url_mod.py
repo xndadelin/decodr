@@ -7,6 +7,8 @@ https://datatracker.ietf.org/doc/html/rfc3986
 
 from __future__ import annotations
 from urllib.parse import quote, unquote
+import sys
+import argparse
 
 def encode(text: str, safe: str = '/') -> str:
     return quote(text, safe=safe)
@@ -14,22 +16,34 @@ def encode(text: str, safe: str = '/') -> str:
 def decode(text: str) -> str:
     return unquote(text)
 
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.encodings.url_mod",
+        description="URL encoding/decoding utility"
+    )
+
+    p.add_argument("action", choices=["encode", "decode"], help="action to perform")
+    p.add_argument("text", help="text to encode or decode (quote if contains spaces)")
+
+    return p
+
 if __name__ == "__main__":
-    import sys
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    if len(sys.argv) < 3:
-        print("Usage: python3 -m decodr.encodings.url_mode <encode|decode> <text>")
-        sys.exit(1)
-
-    cmd, text = sys.argv[1], sys.argv[2]
+    action = args.action
+    text = args.text
 
     try:
-        if cmd == 'encode':
+        if action == "encode":
             print(encode(text))
-        elif cmd == "decode":
+            sys.exit(0)
+        elif action == "decode":
             print(decode(text))
         else:
-            print("Error: Unknown command. Use 'encode' or 'decode'.")
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
+        sys.exit(1)
 
