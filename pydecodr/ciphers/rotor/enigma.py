@@ -3,7 +3,9 @@ decodr.ciphers.rotor.enigma - its a simplied version for my sake i am not alan t
 """
 
 from __future__ import annotations
-from typing import List, Dict
+from typing import List
+import sys
+import argparse
 
 # to do for the the next version: let the user choose its own rotors
 
@@ -55,32 +57,33 @@ def encrypt(plaintext: str) -> str:
     return "".join(out)
 
 decrypt = encrypt
-encode = encrypt
-decode = decrypt
+
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecoder.ciphers.rotor.enigma",
+        description="Simplified Enigma cipher - encrypt/decrypt"
+    )
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or ciphertext (quotes if contains spaces)")
+
+    return p
 
 if __name__ == "__main__":
-    import sys
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.rotor.enigma encrypt <text>\n"
-        "python3 -m decodr.ciphers.rotor.enigma decrypt <text>\n"
-    )
-
-    if len(sys.argv) < 3:
-        print(usage)
-        sys.exit(1)
-    
-    cmd, text = sys.argv[1], sys.argv[2]
+    action = args.action
+    text = args.text
 
     try:
-        if cmd in ("encrypt", "encode", "decrypt", "decode"):
+        if action == 'encrypt':
             print(encrypt(text))
+            sys.exit(0)
+        elif action == "decrypt":
+            print(decrypt(text))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
             sys.exit(1)
     except Exception as e:
-        print(f"Error: {e}")
-        sys.exit(1)
-        
+        print(f'Error: {e}')
