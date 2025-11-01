@@ -1,12 +1,15 @@
 """
 pydecodr.ciphers.classical.hill -  hill cipher (2x2 and 3x3)
 """
+from __future__ import annotations
 
 ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ALPHABET_SET = set(ALPHABET)
 MOD = 26
 
-from __future__ import annotations
+
+import sys
+import argparse
 
 def clean_letters(s):
     return "".join(ch for ch in s.upper() if ch in ALPHABET_SET)
@@ -190,54 +193,48 @@ def decrypt(text: str, key_matrix_str: str, keep_layout: bool = False) -> str:
     out_letters = _block_process(letters, Minv)
     return _with_space_reinsert(text, out_letters) if keep_layout else out_letters
 
-if __name__ == "__main__":
-    import sys
-    
-    usage = (
-        "Usage:\n"
-        "python3 -m pydecodr.ciphers.classical.hill encrypt <text> <matrix> [pad_char] [keep_layout]\n"
-        "python3 -m pydecodr.ciphers.classical.hill decrypt <text> <matrix> [keep_layout]\n"
-        "\n"
-        "Matrix formats accepted:\n"
-        '2x2: "a,b,c,d" | "a b c d" | "a,b; c,d;" | "a b | c d"\n'
-        'same with 3x3 but with 9 items yk\n'
-        "Examples:\n"
-        'python3 -m pydecodr.ciphers.classical.hill encrypt "ATTACKATDAWN" "3,3,2,5"\n'
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.classical.hill",
+        description="Hill cipher (2x2) or 3x3 matrix encryption/decryption",
+        epilog=(
+             "Matrix formats accepted:\n"
+            '   2x2: "a,b,c,d" | "a b c d" | "a,b; c,d;" | "a b | c d"\n'
+            'same with 3x3 but with 9 items yk\n'
+            "Examples:\n"
+            '   python3 -m pydecodr.ciphers.classical.hill encrypt "ATTACKATDAWN" "3,3,2,5"\n'
+        ),
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
-    argv = sys.argv[1:]
-    if len(argv) < 3:
-        print(usage)
-        sys.exit(1)
+    p.add_argument("action", choices=["encrypt", "decrypt"], help='action to perform')
+    p.add_argument("text", help="plaintext or ciphertext")
+    p.add_argument("matrix", help="matrix key, e.g. '3,3,2,4'")
+    p.add_argument("--pad-char", default="X", help="padding character for encryption (default: X)")
+    p.add_argument("--keep-layout", action="store_true", help="keep original text layout (spaces/newlines preserverd)")
 
-    op = argv[0].lower()
+    return p
 
-    if op == "encrypt":
-        text = argv[1]
-        key_str = argv[2]
-        pad_char = "X"
-        keep_layout = False
-        if len(argv) >= 4 and argv[3]:
-            pad_char = argv[3][0].upper()
-        if len(argv) >= 5:
-            keep_layout = argv[4].lower() in ("1", "true", "yes", "y")
-        try:
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    text = args.text
+    key_str = args.matrix
+    pad_char = args.pad_char[0].upper() if args.pad_char else "X"
+    keep_layout = bool(args.keep_layout)
+
+    try:
+        if action == "encrypt":
             print(encrypt(text, key_str, pad_char=pad_char, keep_layout=keep_layout))
-        except Exception as e:
-            print(f"Error: {e}")
-            sys.exit(1)
-    elif op == "decrypt":
-        text = argv[1]
-        key_str = argv[2]
-        keep_layout = False
-        if len(argv) >= 4:
-            keep_layout = argv[3].lower() in ("1", "true", "yes", "y")
-        try:
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, key_str, keep_layout=keep_layout))
-        except Exception as e:
-            print(f"Error: {e}")
+            sys.exit(0)
+        else:
+            parser.print_help()
             sys.exit(1)
-    else:
-        print(usage)
+    except Exception as e:
+        print(f"Error: {e}")
         sys.exit(1)
-
