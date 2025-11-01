@@ -5,6 +5,8 @@ decodr.ciphers.modern.rsa - rsa cipher
 from __future__ import annotations
 from typing import Tuple
 import math
+import sys
+import argparse
 
 def _gcd(a: int, b: int) -> int:
     while b:
@@ -59,55 +61,49 @@ def decrypt(ciphertext: str, n: int, d: int) -> str:
     parts = ciphertext.strip().split()
     return "".join(chr(pow(int(x), d, n)) for x in parts)
 
-encode = encrypt
-decode = decrypt
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.modern.rsa",
+        description="RSA: keygen, encryptm decrypt"
+    )
+    sub = p.add_subparsers(dest="command", required=True)
+
+    sp_gen = sub.add_parser("gen", help="generate key from p, q (primes) and optional e")
+    sp_gen.add_argument("p", type=int, help="prime p")
+    sp_gen.add_argument("q", type=int, help="prime q")
+    sp_gen.add_argument("--e", type=int, default=65537, help="public exponent (default: 65537)")
+
+    sp_enc = sub.add_parser("encrypt", help="encrypt text with (n, e)")
+    sp_enc.add_argument("text", help="plaintext (quote if contains spaces)")
+    sp_enc.add_argument("n", type=int, help="modulus n")
+    sp_enc.add_argument("e", type=int, help="public exponent e")
+
+    sp_dec = sub.add_parser("decrypt", help="decrypt cipher with (n, d)")
+    sp_dec.add_argument("cipher", help="ciphertext (hex or int string)")
+    sp_dec.add_argument("n", type=int, help="modululs n")
+    sp_dec.add_argument("d", type=int, help="private exponent d")
+
+    return p
 
 if __name__ == "__main__":
-    import sys
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.modern.rsa gen <p> <q> [e]\n"
-        "python3 -m decodr.ciphers.modern.rsa encrypt <text> <n> <e>\n"
-        "python3 -m decodr.ciphers.modern.rsa decrypt <cipher> <n> <d>\n"
-    )
-
-    if len(sys.argv) < 3:
-        print(usage)
-        sys.exit(1)
-
-    cmd = sys.argv[1]
     try:
-        if cmd == "gen":
-            if len(sys.argv) < 3:
-                print("Usage <p> <q> [e]")
-                sys.exit(1)
-            p, q = int(sys.argv[2]), int(sys.argv[3])
-            e = int(sys.argv[4]) if len(sys.argv) >= 5 else 65537
-            pub, priv = _generate_keys(p, q, e)
+        if args.command == "gen":
+            pub, priv = _generate_keys(args.p, args.q, args.e)
             print(f"Public key (n, e): {pub}")
             print(f"Private key (n, d): {priv}")
-
-        elif cmd in ("encrypt", "encode"):
-            if len(sys.argv) < 5:
-                print("Usage: encrypt <text> <n> <e>")
-                sys.exit(1)
-            text, n, e = sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
-            print(encrypt(text, n, e))
+            sys.exit(0)
+        if args.command == "encrypt":
+            print(encrypt(args.text, args.n, args.e))
+            sys.exit(0)
         
-        elif cmd in ("decrypt", "decode"):
-            if len(sys.argv) < 5:
-                print("Usage: decrypt <cipher> <n> <d>")
-                sys.exit(1)
-            cipher, n, d = sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
-            print(decrypt(cipher, n, d))
-
-        else:
-            print(usage)
-            sys.exit(1)
-
+        if args.command == "decrypt":
+            print(decrypt(args.cipher, args.n, args.d))
+            sys.exit(0)
+        
+        parser.print_help()
+        sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
-        sys.exit(1)
-
-
