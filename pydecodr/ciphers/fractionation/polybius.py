@@ -5,7 +5,6 @@ pydecodr.ciphers.fractionation.polybius - polybius square cipher (5x5)
 from __future__ import annotations
 
 import argparse
-import sys
 import re
 from typing import List, Tuple, Dict, Optional
 
@@ -43,7 +42,7 @@ def _build_square(keyword: Optional[str], j_as_i: bool) -> List[List[str]]:
 
     if len(used) > 25:
         if "J" in used:
-            used.remove(25)
+            used.remove("J")
         else:
             used = used[:25]
 
@@ -67,7 +66,7 @@ def _square_mappings(
             coord_to_letter[coord] = letter
     return letter_to_cord, coord_to_letter
 
-def encript(plaintext: str, j_as_i: bool = True, numeric_output: bool = True, separator: str = " ", keyword: Optional[str] = None) -> str:
+def encrypt(plaintext: str, j_as_i: bool = True, numeric_output: bool = True, separator: str = " ", keyword: Optional[str] = None) -> str:
     clean = _clean_plaintext(plaintext, j_as_i)
     square = _build_square(keyword, j_as_i)
     l2c, _ = _square_mappings(square)
@@ -87,9 +86,11 @@ def encript(plaintext: str, j_as_i: bool = True, numeric_output: bool = True, se
             out.append(f"{coord[0]}{coord[1]}")
         else:
             out.append(square[coord[0]- 1][coord[1] - 1])
+    
+    return " ".join(out) 
 
 def _parse_numeric_pairs(s: str) -> List[Tuple[int, int]]:
-    pairs = re.findall(r"([1-5]\s*([1-5]))", s)
+    pairs = re.findall(r"([1-5])\s*([1-5])", s)
     if pairs:
         return [(int(a), int(b)) for a, b in pairs]
     compact = re.sub(r"\D", "", s)
@@ -114,6 +115,45 @@ def decrypt(ciphertext: str, j_as_i: bool = True, numeric_input: bool = True, se
             letter = c2l.get(coord)
             if letter:
                 letters.append(letter)
-        return "".join(letter)
+        return "".join(letters)
     else:
         return _clean_plaintext(ciphertext, j_as_i)
+    
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.fractionation.polybius",
+        description="Polybius 5x5 cipher",
+    )
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action")
+    p.add_argument("text", help="text (quote if contains spaces)")
+    p.add_argument("--no-j-as-i", dest="j_as_i", action="store_false", help="do not MERGE J into I")
+    p.add_argument("--no-numeric", dest="numeric", action="store_false", help="encrypt: output letters; decrypt: treat input as letters")
+    p.add_argument("--sep", default=" ", help="separator for numeric pairs (default: space)")
+    p.add_argument("--keyword", default=None, help="optional keyword for keyed square")
+
+    return p
+
+    
+if __name__ == "__main__":
+    import sys
+
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    text = args.text
+    j_as_i = bool(args.j_as_i)
+    numeric = bool(args.numeric)
+    sep = args.sep
+    keyword = args.keyword
+
+    if action == "encrypt":
+        print(encrypt(text, j_as_i=j_as_i, numeric_output=numeric, separator=sep, keyword=keyword))
+        sys.exit(0)
+    
+    if action == "decrypt":
+        print(decrypt(text, j_as_i=j_as_i, numeric_input=numeric, separator=sep, keyword=keyword))
+        sys.exit(0)
+
+    parser.print_help()
+    sys.exit(1)
