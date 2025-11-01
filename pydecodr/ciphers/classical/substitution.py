@@ -4,6 +4,7 @@ decodr.ciphers.classical.substitution - simple monoalphabetic substution
 
 from __future__ import annotations
 import sys
+import argparse
 import string
 import random
 from typing import Tuple, Dict, List
@@ -42,42 +43,44 @@ def decrypt(plaintext: str, key: str) -> str:
     _, reverse = _build_maps(key)
     return "".join(reverse.get(ch, ch) for ch in plaintext)
 
-encode = encrypt
-decode = decrypt
-
-if __name__ == "__main__":
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.classical.substitution generate-key\n"
-        "python3 -m decodr.ciphers.classical.substitution encrypt <text> <key>\n"
-        "python3 -m decodr.ciphers.classical.substitution decrypt <text> <key>\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.classical.substitution",
+        description="Monoalphabetic substitution cipher"
     )
 
-    if len(sys.argv) < 2:
-        print(usage)
-        sys.exit(1)
+    sub = p.add_subparsers(dest="command", required=True)
+
+    sp_gen = sub.add_parser("generate-key", help="generate a random substitution key")
     
-    cmd = sys.argv[1]
+    sp_enc = sub.add_parser("encrypt", help="encrypt plaintext with a key")
+    sp_enc.add_argument("text", help="plaintext (quote if missing spaces)")
+    sp_enc.add_argument("key", help="26-letter key mapping")
+
+    sp_dec = sub.add_parser("decrypt", help="decrypt ciphertext with a key")
+    sp_dec.add_argument("text", help="ciphertext (quote if contains spaces)")
+    sp_dec.add_argument("key", help="26-letter key mapping")
+
+    return p
+
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
     try:
-        if cmd == "generate-key":
+        if args.command == "generate-key":
             print(random_key())
-        elif cmd in ("encode", "encrypt"):
-            if len(sys.argv) < 4:
-                print("encrypt requires <text> <key>")
-                sys.exit(1)
-            text, key = sys.argv[2], sys.argv[3]
-            print(encrypt(text, key))
-        elif cmd in ("decrypt", "decode"):
-            if len(sys.argv) < 4:
-                print("encrypt requires <text> <key>")
-                sys.exit(1)
-            text, key = sys.argv[2], sys.argv[3]
-            print(decrypt(text, key))
-        else:
-            print("Unknown command.")
-            print(usage)
-            sys.exit(1)
-    except Exception as e:
-        print("Error:", e)
-        sys.exit(1)
+            sys.exit(0)
+        if args.command == "encrypt":
+            print(encrypt(args.text, args.key))
+            sys.exit(0)
+        if args.command == "decrypt":
+            print(decrypt(args.text, args.key))
+            sys.exit(0)
         
+        parser.print_help()
+        sys.exit(1)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
