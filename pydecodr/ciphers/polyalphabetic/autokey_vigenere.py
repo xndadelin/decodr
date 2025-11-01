@@ -6,6 +6,8 @@ or the recovered plaintext (for decryption)
 """
 
 from __future__ import annotations
+import sys
+import argparse
 
 def _shift(ch: str, k: int, decrypt: bool = False) -> str:
     if not ch.isalpha():
@@ -55,33 +57,35 @@ def decrypt(ciphertext: str, key: str) -> str:
             
     return "".join(result)
 
-encode = encrypt
-decode = decrypt
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.polyalphabetic.autokey_vigenere",
+        description="Autokey vigenere cipher"
+    )
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or ciphertext (quote if contains spaces)")
+    p.add_argument("key", help="initial key (strings)")
+
+    return p
 
 if __name__ == "__main__":
-    import sys
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.polyalphabetic.autokey_vigenere encrypt <text> <key>\n"
-        "python3 -m decodr.ciphers.polyalphabetic.autokey_vigenere decrypt <text> <key>\n"
-    )
-
-    if len(sys.argv) < 4:
-        print(usage)
-        sys.exit(1)
-    
-    cmd, text, key = sys.argv[1:4]
+    action = args.action
+    text = args.text
+    key = args.key
 
     try:
-        if cmd in("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, key))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, key))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'decrypt' or 'encrypt'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
-        print(f"Error {e}")
+        print(f"Error: {e}")
         sys.exit(1)
-

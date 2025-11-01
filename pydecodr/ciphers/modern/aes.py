@@ -8,6 +8,8 @@ from typing import Union
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
+import argparse
+import sys
 
 BLOCK_SIZE = 16
 
@@ -51,32 +53,39 @@ def decrypt(ciphertext_b64: str, key: Union[str, bytes], *, encoding: str = 'utf
     pt = unpad(cipher.decrypt(ct), BLOCK_SIZE)
     return pt.decode(encoding)
 
-encode = encrypt
-decode = decrypt
-
-if __name__ == "__main__":
-    import sys
-
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.modern.aes encrypt <text> <key>\n"
-        "python3 -m decodr.ciphers.moder.aes decrypt <base64_iv_plus_ct> <key>\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.modern.aes",
+        description="AES-CBC with PKCS7 padding"
     )
 
-    if len(sys.argv) < 4:
-        print(usage)
-        sys.exit(1)
+    p.add_argument("action", choices=["encrypt", "decrypt"], help='action to perform')
+    p.add_argument("data", help="plaintext (encrypt) or base64(iv||ciphertext) (decrypt)")
+    p.add_argument("key", help="key bytes: literal text or 'hex:<hexstring>' (16/24/32 bytes)'")
+    p.add_argument("--encoding", default="utf-8", help="text encoding for plaintext/key (default: utf-8)")
 
-    cmd, arg1, key = sys.argv[1], sys.argv[2], sys.argv[3]
+    return p
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    data = args.data
+    key = args.key
+    enc = args.encoding
+
     try:
-        if cmd in ("encrypt", "encode"):
-            print(encrypt(arg1, key))
-        elif cmd in ("decrypt", "decode"):
-            print(decrypt(arg1, key))
+        if action == "encrypt":
+            print(encrypt(data, key, encoding=enc))
+            sys.exit(9)
+        elif action == "decrypt":
+            print(decrypt(data, key, encoding=enc))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
             sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
+
+        

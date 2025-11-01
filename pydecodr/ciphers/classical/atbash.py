@@ -7,6 +7,9 @@ A <-> Z, B <-> Y ...
 
 from __future__ import annotations
 
+import argparse
+import sys
+
 def _map_char(ch: str) -> str:
     if "a" <= ch <= "z":
         return chr(ord("z") - (ord(ch) - ord("a")))
@@ -17,25 +20,33 @@ def _map_char(ch: str) -> str:
 def transform(text: str) -> str:
     return "".join(_map_char(ch) for ch in text)
 
-def encode(text: str) -> str:
+def encrypt(text: str) -> str:
     return transform(text)
 
-decode = encode
-encrypt = encode
-decrypt = decode
+decrypt = encrypt
+
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.classical.atbash",
+        description="Atbash cipher (encrypt/decrypt)"
+    )
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="text to process (quote if contains spaces)")
+    return p
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) < 3:
-        print("Usage: python3 -m decodr.ciphers.classical.atbash <encode|decode> <text>")
-        sys.exit(1)
-    
-    cmd, text = sys.argv[1], sys.argv[2]
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    text = args.text
+
     try:
-        if cmd in ("encode", "decode", "encrypt", "decrypt"):
+        if action in ("encrypt", "decrypt"):
             print(transform(text))
         else:
-            print("Error: Unknown command. Use 'encode' or 'decode'.")
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
-
+        sys.exit(1)

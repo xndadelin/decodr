@@ -3,10 +3,13 @@ decodr.ciphers.classical.affine - affine cipher
 
 Encryption: E(x) = (ax + b) mod 26
 Decryption: D(x) = a_inv * (x - b) mod 26
-a is the modulare inverse of a mod 26
+a is the modular inverse of a mod 26
 """
-
 from __future__ import annotations
+
+import sys
+import argparse
+
 
 def _char_to_num(ch: str) -> int:
     return ord(ch.lower()) - ord('a')
@@ -62,43 +65,45 @@ def crack(ciphertex: str) -> list[tuple[int, int, str]]:
                 continue
     return results
 
-if __name__ == "__main__":
-    import sys 
-
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.classical.affine encrypt <text> [a] [b]\n"
-        "python3 -m decodr.ciphers.classical.affine decrypt <text> [a] [b]\n"
-        "python3 -m decodr.ciphers.classical.affine crack <ciphertext>\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.classical.affine",
+        description="Affine cipher (encrypt/decrypt/crack)"
     )
 
-    if(len(sys.argv) < 3):
-        print(usage)
-        sys.exit(1)
+    p.add_argument("action", choices=['encrypt', 'decrypt', 'crack'], help="action to perform")
+    p.add_argument("text", help="plaintext (for encrypt) or ciphertext (for decrypt/crack)")
+    p.add_argument("a", nargs="?", type=int, default=5, help="multiplicative key 'a' (default: 5)")
+    p.add_argument("b", nargs="?", type=int, default=8, help="additive key 'b' (default: 8)")
+    
+    return p
 
-    cmd, text = sys.argv[1], sys.argv[2]
-    try:
-        a = int(sys.argv[3]) if len(sys.argv) >= 4 else 5
-        b = int(sys.argv[4]) if len(sys.argv) >= 4 else 8
-    except ValueError:
-        print('a and b must be integers')
-        sys.exit(1)
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
+    action = args.action
+    text = args.text
+    a = int(args.a) if args.a is not None else 5
+    b = int(args.b) if args.b is not None else 8
+    
     try:
-        if cmd in ("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, a, b))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, a, b))
-        elif cmd == "crack":
+            sys.exit(0)
+        elif action == "crack":
             for a_val, b_val, pt in crack(text):
                 print(f"a={a_val:2d}, b={b_val:2d} -> {pt}")
+            sys.exit(0)
         else:
-            print("Error: Unknown command. Use 'encrypt', 'decrypt' or 'crack'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
+    except ValueError as ve:
+        print(f"Error: {ve}")
+        sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
-    
-
-

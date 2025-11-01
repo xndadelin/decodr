@@ -4,6 +4,8 @@ decodr.ciphers.stream.rc4 - RC4 stream cipher
 
 from __future__ import annotations
 from typing import Union, List, Generator
+import sys
+import argparse
 
 def _ksa(key_bytes: bytes) -> List[int]:
     key_length = len(key_bytes)
@@ -49,33 +51,38 @@ def decrypt(ciphertext_hex: str, key: Union[str, bytes], *, encoding: str = 'utf
     pt = _rc4_encrypt(ct, key_b)
     return pt.decode(encoding, errors='strict')
 
-encode = encrypt
-decode = decrypt
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.stream.rc4",
+        description="RC4 stream cipher"
+    )
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("data", help="plaintext (encrypt) or hex ciphertex (decrypt)")
+    p.add_argument("key", help="key for RC4 (string)")
+    p.add_argument("--encoding", default="utf-8", help="text encoding (default: utf-8)")
 
+    return p
 
 if __name__ == "__main__":
-    import sys
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.stream.rc4 encrypt <text> <key> <encoding>\n"
-        "python3 -m decodr.ciphers.stream.rc4 decrypt <hex>  <key> <encoding>\n"
-    )
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    if len(sys.argv) < 4:
-        print(usage)
-        sys.exit(1)
+    action = args.action
+    data = args.data
+    key = args.key
+    enc = args.encoding
 
-    cmd, arg_text, key = sys.argv[1], sys.argv[2], sys.argv[3]
-    enc = sys.argv[4] if len(sys.argv) >= 5 else 'utf-8'
     try:
-        if cmd in ("encrypt", "encode"):
-            print(encrypt(arg_text, key, encoding=enc))
-        elif cmd in ("decrypt", "decode"):
-            print(decrypt(arg_text, key, encoding=enc))
+        if action == "encrypt":
+            print(encrypt(data, key, encoding=enc))
+            sys.exit(0)
+        elif action == 'decrypt':
+            print(decrypt(data, key, encoding=enc))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
             sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
+        

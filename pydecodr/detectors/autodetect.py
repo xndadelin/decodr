@@ -4,10 +4,11 @@ decodr.detectors.autodetect - heuristic detector for encodings
 
 from __future__ import annotations
 import base64 
-import binascii
 import re
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 from pydecodr.utils.fmt import _printable_ratio
+import sys
+import argparse
 
 def is_hex(s: str) -> bool:
     return bool(re.fullmatch(r"[0-9A-Fa-f]+", s)) and len(s) % 2 == 0
@@ -82,22 +83,26 @@ def detect_type(data: str) -> Dict[str, Optional[str]]:
             "confidence": ratio
         }
     
-if __name__ == "__main__":
-    import sys
-
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.detectors.autodetect <string>\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.detectors.autodetect",
+        description="Detects the most likely encoding."
     )
 
-    if len(sys.argv) < 2:
-        print(usage)
-        sys.exit(1)
+    p.add_argument("text", help="string to analyze")
 
-    s = sys.argv[1]
+    return p
+
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    text = args.text
+
     try:
-        result = detect_type(s)
+        result = detect_type(text)
         print(f"Detected: {result['type']} (confidence {result['confidence']:.2f})")
+        sys.exit(0)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
