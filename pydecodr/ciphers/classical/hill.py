@@ -6,6 +6,8 @@ ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ALPHABET_SET = set(ALPHABET)
 MOD = 26
 
+from __future__ import annotations
+
 def clean_letters(s):
     return "".join(ch for ch in s.upper() if ch in ALPHABET_SET)
 
