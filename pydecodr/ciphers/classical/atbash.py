@@ -1,5 +1,5 @@
 """
-decodr.ciphers.classical.atbash - Atbash cipher
+pydecodr.ciphers.classical.atbash - Atbash cipher
 
 Basically each letter is mapped to its reverse counterpard:
 A <-> Z, B <-> Y ...

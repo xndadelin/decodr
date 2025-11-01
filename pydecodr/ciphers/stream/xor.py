@@ -1,5 +1,5 @@
 """
-decodr.ciphers.stream.xor - single-byte xor cipher
+pydecodr.ciphers.stream.xor - single-byte xor cipher
 """
 
 from __future__ import annotations

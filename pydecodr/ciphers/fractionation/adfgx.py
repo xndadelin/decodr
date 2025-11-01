@@ -1,5 +1,5 @@
 """
-decodr.ciphers.fractionation.adfgx - ADFGX cipher
+pydecodr.ciphers.fractionation.adfgx - ADFGX cipher
 """
 
 from __future__ import annotations

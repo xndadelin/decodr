@@ -1,5 +1,5 @@
 """
-decodr.ciphers.modern.aes - AES, CBC, PKCS7, with IV embedded
+pydecodr.ciphers.modern.aes - AES, CBC, PKCS7, with IV embedded
 """
 
 from __future__ import annotations

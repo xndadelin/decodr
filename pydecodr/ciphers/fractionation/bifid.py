@@ -1,5 +1,5 @@
 """
-decodr.ciphers.fractionation.bifid - bifid cipher (polybius + fractionation)
+pydecodr.ciphers.fractionation.bifid - bifid cipher (polybius + fractionation)
 """
 
 from __future__ import annotations

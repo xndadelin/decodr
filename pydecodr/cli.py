@@ -1,10 +1,12 @@
 """
-decodr.cli - command-line interface for decodr.
+pydecodr.cli - command-line interface for decodr.
 
 Provides the commands:
 - encode
 - decode
 - detect
+- encrypt
+- decrypt
 """
 
 from __future__ import annotations

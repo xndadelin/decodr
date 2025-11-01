@@ -1,5 +1,5 @@
 """
-decodr.ciphers.stream.rc4 - RC4 stream cipher
+pydecodr.ciphers.stream.rc4 - RC4 stream cipher
 """
 
 from __future__ import annotations

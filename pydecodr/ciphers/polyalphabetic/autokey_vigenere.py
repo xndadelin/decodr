@@ -1,5 +1,5 @@
 """
-decodr.ciphers.polyalphabetic.vigenere - Autokey Vignere cipher
+pydecodr.ciphers.polyalphabetic.vigenere - Autokey Vignere cipher
 
 - the key is extended by appending the plaintext (for encryption) 
 or the recovered plaintext (for decryption)

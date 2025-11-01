@@ -1,5 +1,5 @@
 """
-decodr.ciphers.classical.substitution - simple monoalphabetic substution
+pydecodr.ciphers.classical.substitution - simple monoalphabetic substution
 """
 
 from __future__ import annotations

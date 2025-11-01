@@ -1,5 +1,5 @@
 """
-decodr.ciphers.polyalphabetic.vigenere - Vignere cipher
+pydecodr.ciphers.polyalphabetic.vigenere - Vignere cipher
 
 E_i = (P_i + K_i) mod 26
 D_i = (C_i - K_i) mod 26

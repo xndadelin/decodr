@@ -1,5 +1,5 @@
 """
-decodr.ciphers.modern.rsa - rsa cipher
+pydecodr.ciphers.modern.rsa - rsa cipher
 """
 
 from __future__ import annotations

@@ -1,5 +1,5 @@
 """
-decodr.ciphers.classical.rot13 - ROT13 cipher via caesar(where shift is 13)
+pydecodr.ciphers.classical.rot13 - ROT13 cipher via caesar(where shift is 13)
 """
 
 from __future__ import annotations

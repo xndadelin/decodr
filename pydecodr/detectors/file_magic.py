@@ -1,5 +1,5 @@
 """
-decodr.detectors.file_magic - magic number detection
+pydecodr.detectors.file_magic - magic number detection
 """
 
 from __future__ import annotations
