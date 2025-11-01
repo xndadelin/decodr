@@ -6,6 +6,8 @@ from __future__ import annotations
 import hashlib
 from typing import Literal
 import hmac
+import sys
+import argparse
 
 HashAlgo = Literal[
     "md5",
@@ -25,37 +27,41 @@ def hash_text(text: str, algo: HashAlgo = "sha256", *, encoding: str = "utf-8") 
 def verify_hash(text: str, digest: str, algo: HashAlgo = "sha256", *, encoding: str = "utf-8") -> bool:
     return hmac.compare_digest((hash_text(text, algo, encoding=encoding)), digest)
 
-if __name__ == "__main__":
-    import sys
-
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.modern.hashes hash <text> [algo]\n"
-        "python3 -m decodr.ciphers.modern.hashes verify <text> <digest>"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.modern.hashes",
+        description="Hashing utilities"
     )
 
-    if len(sys.argv) < 3 :
-        print(usage)
-        sys.exit(1)
+    sub = p.add_subparsers(dest="command", required=True)
 
-    cmd = sys.argv[1]
+    p_hash = sub.add_parser("hash", help="compute hash of a text")
+    p_hash.add_argument("text", help="text to hash")
+    p_hash.add_argument("--algo", default="sha256", help="hash algoritm (default: sha256)", choices=["md5", "sha1", "sha256","sha512"])
+
+    p_verify = sub.add_parser("verify", help="verify if text matches the hash")
+    p_verify.add_argument("text", help="original text")
+    p_verify.add_argument("digest", help="expected hash digest (hex)")
+    p_verify.add_argument("--algo", default="sha256", help="hash algoritm (default: sha256)", choices=["md5", "sha1", "sha256","sha512"])
+
+    return p
+
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
     try:
-        if cmd == "hash":
-            text = sys.argv[2]
-            algo = sys.argv[3] if len(sys.argv) >= 4 else "sha256"
-            print(hash_text(text, algo))
-        elif cmd == "verify":
-            if len(sys.argv) < 4:
-                print("Usage: verify <text> <digest> [algo]")
-                sys.exit(1)
-            text, digest = sys.argv[2], sys.argv[3]
-            algo = sys.argv[4] if len(sys.argv) >= 5 else "sha256"
-            ok = verify_hash(text, digest, algo)
+        if args.command == "hash":
+            print(hash_text(args.text, args.algo))
+            sys.exit(0)
+        elif args.command == "verify":
+            ok = verify_hash(args.text, args.digest, args.algo)
             print("✅ match" if ok else "❌ not a match")
+            sys.exit(0)
         else:
-            print(usage)
+            parser.print_help()
             sys.exit(1)
-
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
+        
