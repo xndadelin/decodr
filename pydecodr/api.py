@@ -17,12 +17,12 @@ ENCODING_MAP = {
     "url": "pydecodr.encodings.url_mod",
 
     "caesar": "pydecodr.ciphers.classical.caesar",
-    "atbash": "pydecodr.ciphers.classical.atbhas",
+    "atbash": "pydecodr.ciphers.classical.atbash",
     "affine": "pydecodr.ciphers.classical.affine",
     "rot13": "pydecodr.ciphers.classical.rot13",
     "substitution": "pydecodr.ciphers.classical.substitution",
 
-    "vigenere": "pydecodr.ciphers.polyalphabetic.vignere",
+    "vigenere": "pydecodr.ciphers.polyalphabetic.vigenere",
     "autokey_vignere": "pydecodr.ciphers.polyalphabetic.autokey_vigenere",
     "beaufort": "pydecodr.ciphers.polyalphabetic.beaufort",
     "playfair": "pydecodr.ciphers.polyalphabetic.playfair",
@@ -55,16 +55,38 @@ def __load_module(scheme: str):
 
 def encode(scheme: str, text: str, **kwargs: Any) -> str:
     mod = __load_module(scheme)
-    fn = getattr(mod, "encode", getattr(mod, "encrypt", None))
+    fn = getattr(mod, "encode")
     if fn is None:
-        raise AttributeError(f"Module '{mod.__name__}' has no encode/encrypt function.")
+        raise AttributeError(f"Module '{mod.__name__}' has no encode function.")
     return fn(text, **kwargs)
 
 def decode(scheme: str, text: str, **kwargs: Any) -> str:
     mod = __load_module(scheme)
-    fn = getattr(mod, "decode", getattr(mod, "decrypt", None))
+    fn = getattr(mod, "decode")
     if fn is None:
-        raise AttributeError(f"Module '{mod.__name__}' has no decode/decrypt function.")
+        raise AttributeError(f"Module '{mod.__name__}' has no decode function.")
+    return fn(text, **kwargs)
+
+def encrypt(scheme: str, text: str, /, **kwargs: Any) -> str:
+    mod = __load_module(scheme)
+    fn = getattr(mod, "encrypt")
+    if fn is None:
+        raise AttributeError(f"Module '{mod.__name__}' has no encrypt function.")
+    return fn(text, **kwargs)
+    
+
+def decrypt(scheme: str, text: str, /, **kwargs: Any) -> str:
+    mod = __load_module(scheme)
+    fn = getattr(mod, "decrypt")
+    if fn is None:
+        raise AttributeError(f"Module '{mod.__name__}' has no decrypt function.")
+    return fn(text, **kwargs)
+
+def crack(scheme: str, text: str, /, **kwargs: Any) -> str:
+    mod = __load_module(scheme)
+    fn = getattr(mod, "crack")
+    if fn is None:
+        raise AttributeError(f"Module '{mod.__name__}' has no crack function.")
     return fn(text, **kwargs)
 
 def detect(text: str, limit: int = 5) -> list[dict[str, str]]:
