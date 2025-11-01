@@ -4,6 +4,8 @@ decodr.ciphers.fractionation.bifid - bifid cipher (polybius + fractionation)
 
 from __future__ import annotations
 from typing import List, Tuple
+import sys
+import argparse
 
 ALPHABET_25 = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
 
@@ -151,34 +153,38 @@ def decrypt(ciphertext: str, key: str | None = None, period: int = 5) -> str:
 
     return _reinsert_nonletters(out_letters, mask)
 
-encode = encrypt
-decode = decrypt
-
-if __name__ == "__main__":
-    import sys
-    
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.fractionation.bifid encrypt <text> [key] [period]\n"
-        "python3 -m decodr.ciphers.fractionation.bifid decrypt <text> [key] [period]\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.fractionation.bifid",
+        description="Bifid cipher"
     )
 
-    if len(sys.argv) < 3:
-        print(usage)
-        sys.exit(1)
-    
-    cmd, text = sys.argv[1], sys.argv[2]
-    key = sys.argv[3] if len(sys.argv) >= 4 else None
-    period = int(sys.argv[4]) if len(sys.argv) >= 5 else 5
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or cipher text (quote if contains spaces)")
+    p.add_argument('--key', default=None, help="optional Polybius key (default: None)")
+    p.add_argument("--period", type=int, default=5, help="period for fractionation (default: 5)")
+
+    return p
+
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    text = args.text
+    key = args.key
+    period = args.period 
 
     try:
-        if cmd in ("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, key=key, period=period))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, key=key, period=period))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.") 
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)

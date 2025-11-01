@@ -5,6 +5,7 @@ pydecodr.ciphers.fractionation.polybius - polybius square cipher (5x5)
 from __future__ import annotations
 
 import argparse
+import sys
 import re
 from typing import List, Tuple, Dict, Optional
 
@@ -135,7 +136,6 @@ def _build_argparser() -> argparse.ArgumentParser:
 
     
 if __name__ == "__main__":
-    import sys
 
     parser = _build_argparser()
     args = parser.parse_args(sys.argv[1:])
