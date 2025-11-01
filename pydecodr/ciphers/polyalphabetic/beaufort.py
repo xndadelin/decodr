@@ -4,6 +4,8 @@ C_i = (K_i - P_i) mod 26
 """
 
 from __future__ import annotations
+import sys
+import argparse
 
 def _char_to_idx(ch: str) -> int:
     return ord(ch.lower()) - ord("a")
@@ -42,34 +44,37 @@ def encrypt(plaintext: str, key: str) -> str:
 def decrypt(ciphertext: str, key: str) -> str:
     return transform(ciphertext, key)
 
-encode = encrypt
-decode = decrypt
-
-if __name__ == "__main__":
-    import sys
-    
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.polyalphabetic.beaufort encrypt <text> <key>\n"
-        "python3 -m decodr.ciphers.polyalphabetic.beaufort decrypt <text> <key>\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.polyalphabetic.beaufort",
+        description="Beaufort cipher"
     )
 
-    if len(sys.argv) < 4:
-        print(usage)
-        sys.exit(1)
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or ciphertext (quotes if contains spaces)")
+    p.add_argument("key", help="key (string)")
 
-    cmd, text, key = sys.argv[1:4]
+    return p
+
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    text = args.text
+    key = args.key
 
     try:
-        if cmd in ("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, key))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == 'decrypt':
             print(decrypt(text, key))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
 
-        
