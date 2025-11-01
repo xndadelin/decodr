@@ -3,7 +3,9 @@ decodr.ciphers.transposition.columnar - columnar transposition cipher
 """
 
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List
+import sys
+import argparse
 
 def _key_order(key: str) -> List[int]:
     indexed = list(enumerate(key))
@@ -83,36 +85,40 @@ def decrypt(ciphertext: str, key: str, pad: str | None = None) -> str:
 
     plaintext = "".join(ch for row in rows for ch in row if ch != "")
     return plaintext
-    
-encode = encrypt
-decode = decrypt
+
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.transposition.columnar",
+        description="Columnar transposition cipher.",
+        epilog="If you used padding during encrypt, pass the some one during decrypt."
+    )
+
+    p.add_argument('action', choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or ciphertex (quote if contains spaces)")
+    p.add_argument("key", help="transposition key (string)")
+    p.add_argument("--pad", default=None, help="optional padding character (default: none)")
+
+    return p
 
 if __name__ == "__main__":
-    import sys
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.transposition.columnar encrypt <text> <key> [pad]\n"
-        "python3 -m decodr.transposition.columnar decrypt <text> <key> [pad]\n"
-        "Notes:\n"
-        "- If you used padding during encrypt, pass the same pad\n"
-    )
-    
-    if len(sys.argv) < 4:
-        print(usage)
-        sys.exit(1)
-
-    cmd, text, key = sys.argv[1:4]
-    pad = sys.argv[4] if len(sys.argv) >= 5 else None
+    action = args.action
+    text = args.text
+    key = args.key
+    pad = args.pad
 
     try:
-        if cmd in ("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, key, pad=pad))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, key, pad=pad))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
