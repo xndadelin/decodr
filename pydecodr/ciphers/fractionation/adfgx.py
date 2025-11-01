@@ -4,6 +4,8 @@ decodr.ciphers.fractionation.adfgx - ADFGX cipher
 
 from __future__ import annotations
 from typing import Dict, List, Tuple
+import sys
+import argparse
 
 ADFGX = "ADFGX"
 ALPHABET_25 = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
@@ -148,35 +150,41 @@ def decrypt(ciphertext: str, square_key: str | None, trans_key: str, pad: str | 
     letters = _polybius_decode(inter, square_key)
     return "".join(letters)
 
-encode = encrypt
-decode = decrypt
-
-if __name__ == "__main__":
-    import sys
-
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.fractionation.adfgx encrypt <text> <square_key> <trans_key> [pad]\n"
-        "python3 -m decodr.ciphers.fractionation.adfgx decrypt <text> <square_key> <trans_key> [pad]\n"
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog='pydecodr.ciphers.fractionation.adfgx',
+        description="ADFGX cipher"
     )
 
-    if len(sys.argv) < 5:
-        print(usage)
-        sys.exit(1)
+    p.add_argument('action', choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument('text', help="plaintext or ciphertext (quote if contains spaces)")
+    p.add_argument("square_key", help='Polybius square keyword (use "-" for default)')
+    p.add_argument('trans_key', help="transposition key")
+    p.add_argument('--pad', default="X", help="padding character (default: X)")
 
-    cmd, text = sys.argv[1], sys.argv[2]
-    square_key = sys.argv[3] if sys.argv[3] != '-' else None
-    trans_key = sys.argv[4]
-    pad = sys.argv[5] if len(sys.argv) >= 6 else "X"
+    return p
+
+if __name__ == "__main__":
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
+
+    action = args.action
+    text = args.text
+    square_key = None if args.square_key == "-" else args.square_key
+    trans_key = args.trans_key
+    pad = args.pad[0].upper() if args.pad else "X"
 
     try:
-        if cmd in ("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, square_key, trans_key, pad=pad))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, square_key, trans_key, pad=pad))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
+        
