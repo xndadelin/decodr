@@ -7,8 +7,8 @@ __all__ = [
     "__description__",
     "encode",
     "decode",
-    "encryp",
-    "decode",
+    "encrypt",
+    "decrypt",
     "detect"
 ]
 
