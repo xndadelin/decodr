@@ -3,6 +3,8 @@ decodr.ciphers.transposition.railfence - rail fence (zig-zag) ciphers
 """
 
 from __future__ import annotations
+import sys
+import argparse
 
 def _zigzag_indices(n: int, rails: int) -> list[int]:
     if rails < 2:
@@ -43,32 +45,36 @@ def decrypt(ciphertext: str, rails: int = 3) -> str:
 
     return "".join(plain[i] for i in range(n))
 
-encode = encrypt
-decode = decrypt
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.cipherrs.transposition.railfence",
+        description="Rail fence cipher"
+    )
+
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or ciphertext (quote if contains spaces)")
+    p.add_argument('--rails', type=int, default=3, help="number of rails")
+
+    return p
 
 if __name__ == "__main__":
-    import sys
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.transposition.railfence encrypt <text> [rails]\n"
-        "python3 -m decodr.ciphers.transposition.railfence decrypt <text> [rails]\n"
-    )
-    if len(sys.argv) < 3:
-        print(usage)
-        sys.exit(1)
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    cmd, text = sys.argv[1], sys.argv[2]
-    rails = int(sys.argv[3]) if len(sys.argv) >= 4 else 3
+    action = args.action
+    text = args.text
+    rails = args.rails
 
     try:
-        if cmd in("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, rails))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, rails))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-
