@@ -1,5 +1,5 @@
 """
-decodr.ciphers.modern.hashes = common has algoritms md5, sha1, sha256/512
+pydecodr.ciphers.modern.hashes = common has algoritms md5, sha1, sha256/512
 """
 
 from __future__ import annotations

@@ -1,5 +1,5 @@
 """
-decodr.ciphers.classical.affine - affine cipher 
+pydecodr.ciphers.classical.affine - affine cipher 
 
 Encryption: E(x) = (ax + b) mod 26
 Decryption: D(x) = a_inv * (x - b) mod 26

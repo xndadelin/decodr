@@ -1,5 +1,5 @@
 """
-decodr.encodings.hex_mod - Hexadecimal encode/decode helpers
+pydecodr.encodings.hex_mod - Hexadecimal encode/decode helpers
 
 Supports:
 - encoding UTF-8 text to hex

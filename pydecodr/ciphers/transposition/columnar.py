@@ -1,5 +1,5 @@
 """
-decodr.ciphers.transposition.columnar - columnar transposition cipher
+pydecodr.ciphers.transposition.columnar - columnar transposition cipher
 """
 
 from __future__ import annotations

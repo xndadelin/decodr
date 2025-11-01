@@ -1,5 +1,5 @@
 """
-decodr.encodings.base64_mod - Base64 encode/decode helpers.
+pydecodr.encodings.base64_mod - Base64 encode/decode helpers.
 
 Features:
 - UTF-8 text in/out (internal bytes conversion)

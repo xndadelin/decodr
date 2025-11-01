@@ -1,5 +1,5 @@
 """
-decodr.ciphers.rotor.enigma - its a simplied version for my sake i am not alan turing
+pydecodr.ciphers.rotor.enigma - its a simplied version for my sake i am not alan turing
 """
 
 from __future__ import annotations

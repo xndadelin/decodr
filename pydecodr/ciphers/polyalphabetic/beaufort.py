@@ -1,5 +1,5 @@
 """
-decodr.ciphers.polyalphabetic.beaufort - classical beaufort cipher
+pydecodr.ciphers.polyalphabetic.beaufort - classical beaufort cipher
 C_i = (K_i - P_i) mod 26
 """
 

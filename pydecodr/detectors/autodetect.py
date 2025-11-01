@@ -1,5 +1,5 @@
 """
-decodr.detectors.autodetect - heuristic detector for encodings
+pydecodr.detectors.autodetect - heuristic detector for encodings
 """
 
 from __future__ import annotations

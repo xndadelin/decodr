@@ -1,5 +1,5 @@
 """
-decodr.ciphers.classical.caesar - Caesar cipher - a monoalphabetic shift
+pydecodr.ciphers.classical.caesar - Caesar cipher - a monoalphabetic shift
 
 Features:
 - encrypt or decript using a integer shift

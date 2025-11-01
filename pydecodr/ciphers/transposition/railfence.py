@@ -1,5 +1,5 @@
 """
-decodr.ciphers.transposition.railfence - rail fence (zig-zag) ciphers
+pydecodr.ciphers.transposition.railfence - rail fence (zig-zag) ciphers
 """
 
 from __future__ import annotations

@@ -1,5 +1,5 @@
 """
-decodrs.ciphers.polyalphabetic.playfair - playfair cipher (5x5, I/J merged)
+pydecodrs.ciphers.polyalphabetic.playfair - playfair cipher (5x5, I/J merged)
 """
 
 from __future__ import annotations

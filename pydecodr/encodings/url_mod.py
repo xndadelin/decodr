@@ -1,5 +1,5 @@
 """
-decodr.encodings.url_mod - URL encoding helpers.
+pydecodr.encodings.url_mod - URL encoding helpers.
 
 This module just implements encode/decode for URL-safe percent-encoding.
 https://datatracker.ietf.org/doc/html/rfc3986

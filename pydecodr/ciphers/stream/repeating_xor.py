@@ -1,5 +1,5 @@
 """
-decodr.ciphers.stream.repeating_xor - repeating-key XOR cipher
+pydecodr.ciphers.stream.repeating_xor - repeating-key XOR cipher
 """
 
 from __future__ import annotations

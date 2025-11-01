@@ -1,5 +1,5 @@
 """
-decodr.encodings.base32_mod - Base32 encode/decode helpers.
+pydecodr.encodings.base32_mod - Base32 encode/decode helpers.
 
 Features:
 - UTF-8 text in/out (internal bytes conversion)
