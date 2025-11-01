@@ -4,6 +4,8 @@ decodrs.ciphers.polyalphabetic.playfair - playfair cipher (5x5, I/J merged)
 
 from __future__ import annotations
 from typing import List, Tuple
+import sys
+import argparse
 
 ALPHABET_25 = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
 
@@ -96,29 +98,37 @@ def decrypt(ciphertext: str, key: str, pad: str = "X") -> str:
 
     return "".join(out)
 
-encode = encrypt
-decode = decrypt
+
+def _build_argparser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="pydecodr.ciphers.polyalphabetic.playfair",
+        description="Playfair cipher"
+    )
+
+    p.add_argument("action", choices=["encrypt", "decrypt"], help="action to perform")
+    p.add_argument("text", help="plaintext or ciphertext (quote if contains spaces)")
+    p.add_argument("key", help="Playfair key (string)")
+
+    return p
 
 if __name__ == "__main__":
-    import sys
-    usage = (
-        "Usage:\n"
-        "python3 -m decodr.ciphers.polyalphabetic.playfair encrypt <text> <key>\n"
-        "python3 -m decodr.ciphers.polyalphabetic.playfair decrypt <text> <key>\n"
-    )
-    if len(sys.argv) < 4:
-        print(usage)
-        sys.exit(1)
+    parser = _build_argparser()
+    args = parser.parse_args(sys.argv[1:])
 
-    cmd, text, key = sys.argv[1:4]
+    action = args.action
+    text = args.text
+    key = args.key
+
     try:
-        if cmd in ("encrypt", "encode"):
+        if action == "encrypt":
             print(encrypt(text, key))
-        elif cmd in ("decrypt", "decode"):
+            sys.exit(0)
+        elif action == "decrypt":
             print(decrypt(text, key))
+            sys.exit(0)
         else:
-            print("Unknown command. Use 'encrypt' or 'decrypt'.")
-            print(usage)
+            parser.print_help()
+            sys.exit(1)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f'Error: {e}')
         sys.exit(1)
