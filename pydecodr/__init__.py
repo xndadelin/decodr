@@ -1,4 +1,4 @@
-"""decodr - core package."""
+"""pydecodr - core package."""
 
 from importlib.metadata import version, PackageNotFoundError
 
@@ -12,16 +12,23 @@ __all__ = [
     "detect"
 ]
 
-__description__ = "decodr - a modular CTF/crypto CLI toolkit for encodings, classic ciphers, and autodetection."
+__description__ = "pydecodr - a modular CTF/crypto CLI toolkit for encodings, classic ciphers, and autodetection."
 
 try:
-    __version__ = version("decodr")
+    __version__ = version("pydecodr")
 except PackageNotFoundError:
     __version__ = "0.1.0"
 
 try:
-    from .api import encode, decode, detect
+    from .api import encode, decode, detect, encrypt, decrypt
 except ImportError as e:
     raise ImportError(
-        "decodr.api not found. Make sure 'src/decodr/api.py' exists."
+        "pydecodr.api not found. Make sure 'src/pydecodr/api.py' exists."
     ) from e
+
+for _name in ("ciphers", "encodings"):
+    try:
+        mod = __import__(f"{__name__}.{_name}", fromlist=[_name])
+        globals()[_name] = mod
+    except Exception:
+        pass

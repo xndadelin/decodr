@@ -65,7 +65,7 @@ def decrypt(ciphertext: str, key: str) -> str:
 
 def _build_argparser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="pydecodr.ciphers.classical.gronsfield",
+        prog="pydecodr.ciphers.classical.gronsfeld",
         description="Gronsfeld cipher"
     )
 
