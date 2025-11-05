@@ -1,18 +1,14 @@
-_names = (
-    "polybius",
-    "bazeries",
-    "bifid",
-    "four_square",
-    "nihilist",
-    "trifid",
-    "adfgx"
-)
+import pkgutil
+import importlib
 
-for _n in _names:
+__all__ = []
+for _m in pkgutil.iter_modules(__path__):
+    _name = _m.name
+    if _name.startswith("_"):
+        continue
     try:
-        mod = __import__(f"{__name__}.{_n}", fromlist=[_n])
-        globals()[_n] = mod
+        mod = importlib.import_module(f"{__name__}.{_name}")
+        globals()[_name] = mod
+        __all__.append(_name)
     except Exception:
         pass
-
-__all__ = [n for n in _names if n in globals()]
