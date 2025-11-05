@@ -8,6 +8,6 @@ def test_nihilist():
     ct = nihilist.encrypt(pt, square_key, numeric_key)
     rt = nihilist.decrypt(ct, square_key, numeric_key)
 
-    expected = "".join(("I" if c.upper() == "J" else c.upper()) for c in pt if c.isalph())
+    expected = "".join(("I" if c.upper() == "J" else c.upper()) for c in pt if c.isalpha())
 
     assert rt == expected
