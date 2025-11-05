@@ -49,9 +49,10 @@ def decrypt(ciphertext: str, key: str) -> str:
     for ch in ciphertext:
         if ch.isalpha():
             k = _char_to_shift(key_stream[j].lower())
-            result.append(_shift(ch, k, decrypt=True))
+            plain_ch = _shift(ch, k, decrypt=True)
+            result.append(plain_ch)
             j += 1
-            key_stream.append(_shift(ch, k), decrypt=True)
+            key_stream.append(plain_ch)
         else:
             result.append(ch)
             
