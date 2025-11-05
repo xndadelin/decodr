@@ -42,7 +42,7 @@ def _pos(square: str, ch: str) -> tuple[int, int]:
 def _diagraphs(letters_only: str) -> list[tuple[str, str]]:
     t = letters_only
     if len(t) % 2 == 1:
-        t += "X"
+        t += t[-1]
     return [(t[i], t[i+1]) for i in range(0, len(t), 2)]
 
 def _apply_meta(original: str, letters_result: str, meta: list[tuple[int, str]]) -> str:
@@ -76,6 +76,9 @@ def encrypt(plaintext: str, key1: str, key2: str) -> str:
         out_letters.append(TR[ra*5 + cb])
         out_letters.append(BL[rb*5 + ca])
 
+    if len(letters) % 2 == 1:
+        out_letters.pop(-2)
+
     return _apply_meta(plaintext, "".join(out_letters), meta)
 
 def decrypt(ciphertext: str, key1: str, key2: str) -> str:
@@ -87,17 +90,17 @@ def decrypt(ciphertext: str, key1: str, key2: str) -> str:
     letters, meta = _clean_letter_keep_positions(ciphertext)
     if not letters:
         return ciphertext
-    
-    pairs = _diagraphs(letters)
+
+    pairs = _diagraphs(letters)    
+
     out_letters = []
     for a, b in pairs:
         ra, cb = _pos(TR, a)
         rb, ca = _pos(BL, b)
         out_letters.append(TL[ra*5 + ca])
         out_letters.append(BR[rb*5 + cb])
-    
-    needed = sum(1 for _, k in meta if k != "non")
 
+    needed = sum(1 for _, k in meta if k != "non")
 
     return _apply_meta(ciphertext, "".join(out_letters)[:needed], meta)
 
