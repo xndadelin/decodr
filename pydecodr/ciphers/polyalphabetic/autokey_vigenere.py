@@ -1,5 +1,5 @@
 """
-pydecodr.ciphers.polyalphabetic.vigenere - Autokey Vignere cipher
+pydecodr.ciphers.polyalphabetic.autokey_vigenere - Autokey Vignere cipher
 
 - the key is extended by appending the plaintext (for encryption) 
 or the recovered plaintext (for decryption)
@@ -49,7 +49,7 @@ def decrypt(ciphertext: str, key: str) -> str:
     for ch in ciphertext:
         if ch.isalpha():
             k = _char_to_shift(key_stream[j].lower())
-            result.append(_shift(ch, k), decrypt=True)
+            result.append(_shift(ch, k, decrypt=True))
             j += 1
             key_stream.append(_shift(ch, k), decrypt=True)
         else:
