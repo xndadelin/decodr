@@ -17,10 +17,10 @@
 - classical ciphers: (caesar, atbash, affine, rot13, substitution, hill, polybius, 4square, bacon)
 - polyalphabetic: (vigenere, autokey_vigenere, beaufort, playfair, gronsfeld)
 - fractionation: (bifid, ADFGX, trifid, ADFGVX)
-- transposition: (railfence, columnar, double transposition, myszkowski)
+- transposition: (railfence, columnar, double transposition, myszkowski, route)
 - stream: (xor, repeating xor, rc4)
 - modern: (aes, rsa, hash utilities)
-- encodings: (b32, b64, hex, URL-safe, morse)
+- encodings: (b32, b64, hex, URL-safe, morse, base85)
 - detection & utils: (file magic detection, I/O helpers)
 - cli interface
 
