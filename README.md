@@ -14,13 +14,13 @@
 
 ---
 ## Features:
-- classical ciphers: (caesar, atbash, affine, rot13, substitution)
-- polyalphabetic: (vigenere, autokey_vigenere, beaufort, playfair)
-- fractionation: (bifid, ADFGX)
-- transpos9ition: (railfence, columnar)
+- classical ciphers: (caesar, atbash, affine, rot13, substitution, hill, polybius, 4square, bacon)
+- polyalphabetic: (vigenere, autokey_vigenere, beaufort, playfair, gronsfeld)
+- fractionation: (bifid, ADFGX, trifid, ADFGVX)
+- transposition: (railfence, columnar, double transposition, myszkowski)
 - stream: (xor, repeating xor, rc4)
 - modern: (aes, rsa, hash utilities)
-- encodings: (b32, b64, hex, URL-safe)
+- encodings: (b32, b64, hex, URL-safe, morse)
 - detection & utils: (file magic detection, I/O helpers)
 - cli interface
 
