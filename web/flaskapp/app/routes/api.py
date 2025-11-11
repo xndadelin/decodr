@@ -1,3 +1,21 @@
+"""
+{
+    "input": "SGVsbG8=",
+    "recipe": [
+        {"operation": "base64", "action": "decode"},
+        {"operation": "caesar", "action": "decrypt", "params": {"shift": 3}}
+    ]
+}
+
+{
+    "operation": "caesar",
+    "action": "decrypt",
+    "input": "KHOOR",
+    "params": {"shift": 3}
+}
+
+"""
+
 from flask import Blueprint, request, jsonify
 import sys
 import os
@@ -72,3 +90,73 @@ def execute_operation():
             "success": False,
             "error": f"Execution error: {str(e)}"
         }), 500
+    
+@bp.route('/execute-recipe', methods=['POST'])
+def execute_recipe():
+    data = request.json
+
+    if not data:
+        return jsonify({
+            "success": False,
+            "error": "Oops! No data provided!"
+        }), 400
+    
+    input_text = data.get('input', '')
+    recipe = data.get('recipe', [])
+
+    if not recipe:
+        return jsonify({
+            "success": False,
+            "error": "Empty recipe, oops!"
+        }), 400
+    
+    result = input_text
+    steps = []
+    
+    action_map = {
+        'encode': encode,
+        'decode': decode,
+        "encrypt": encrypt,
+        "decrypt": decrypt,
+        "crack": crack
+    }
+
+    for i, step in enumerate(recipe):
+        operation = step.get('operation')
+        action = step.get('action')
+        params = step.get('params', {})   
+
+        try:
+            if action not in action_map:
+                raise ValueError(f"Invalid action: {action}")
+            
+            func = action_map[action]
+            result = func(operation, result, **params)
+
+            steps.append({
+                "step": i + 1,
+                'operation': operation,
+                "action": action,
+                "output": result,
+                "success": True
+            })
+        except Exception as e:
+            steps.append({
+                "step": i + 1,
+                'operation': operation,
+                "action": action,
+                "error": str(e),
+                "success": False
+            })
+            return jsonify({
+                "success": False,
+                "output": result, 
+                "steps": steps,
+                "error": f"Failed at step {i + 1}: {str(e)}"
+            }), 400
+        
+    return jsonify({
+        'success': True,
+        "output": result,
+        "steps": steps
+    })
